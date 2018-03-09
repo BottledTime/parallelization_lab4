@@ -36,6 +36,8 @@ int main (int argc, char* argv[]){
     int iterationcount = 0;
     double start, end;
     int my_rank, npes;
+    int local_a, local_b, local_node;
+    
 
     // Load the data and simple verification
       
@@ -52,17 +54,15 @@ int main (int argc, char* argv[]){
        // Allocate memory for serial rank and dummy rank_pre
        r = malloc(nodecount * sizeof(double));
        r_pre = malloc(nodecount * sizeof(double));
-
+      
        // Initialize equal probabilities
        for ( i = 0; i < nodecount; ++i){
            r[i] = 1.0 / nodecount;
        }
-       
+
        // Set up damping constant (1-d)/N in Eq (3).
        damp_const = (1.0 - DAMPING_FACTOR) / nodecount;
 
-       GET_TIME(start);
- 
       // Initialize MPI
       MPI_Init(&argc, &argv);
 
@@ -72,9 +72,16 @@ int main (int argc, char* argv[]){
       // Get rank of current process
       MPI_Comm_rank(MPI_COMM_WORLD, &my_rank); 
 
-      // Test
-      printf("Hello from process %d out of %d\n",my_rank, npes);
- 
+      // Get locals
+      local_node = nodecount/npes;
+      local_a = my_rank*local_node;
+      local_b = local_a + local_node;
+
+      double* tmp = malloc(local_node * sizeof(double));
+
+       // Timing
+       GET_TIME(start);
+  
        // CORE CALCULATION
        do{
            // Count iterations
@@ -83,21 +90,27 @@ int main (int argc, char* argv[]){
            vec_cp(r, r_pre, nodecount);
            
            // Loop over nodes
-           for ( i = 0; i < nodecount; ++i){
-               r[i] = 0;
-               for ( j = 0; j < nodehead[i].num_in_links; ++j){
-                   r[i] += r_pre[nodehead[i].inlinks[j]] / num_out_links[nodehead[i].inlinks[j]];
+           for ( i = 0; i<local_node; ++i){
+               tmp[i] = 0;
+               int indx = local_a + i;
+               for ( j = 0; j < nodehead[indx].num_in_links; ++j){
+                   tmp[i] += r_pre[nodehead[indx].inlinks[j]] / num_out_links[nodehead[indx].inlinks[j]];
                }
-               r[i] *= DAMPING_FACTOR;
-               r[i] += damp_const;
+               tmp[i] *= DAMPING_FACTOR;
+               tmp[i] += damp_const;
            }
+           // Gather everything 
+           MPI_Allgather(tmp, local_node, MPI_DOUBLE, r, local_node, MPI_DOUBLE, MPI_COMM_WORLD);
        }while(rel_error(r, r_pre, nodecount) >= EPSILON);
 
+       free(tmp);
+
        MPI_Finalize();
-      
+
+       // Get final time
        GET_TIME(end);
 
-   printf("Elapsed time %lf\n",end-start);
+      printf("Elapsed time %lf\n",end-start);
 
     // save output data
     Lab4_saveoutput(r,nodecount,end-start);
@@ -110,5 +123,4 @@ int main (int argc, char* argv[]){
     
     // terminate
     return 0;
-    
 }

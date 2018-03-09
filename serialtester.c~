@@ -81,7 +81,7 @@ int main (int argc, char* argv[]){
        // Calculate the result
        if (node_init(&nodehead, num_in_links, num_out_links, 0, nodecount)) return 254;
 
-       // Allocate memory for serial rank and     
+       // Allocate memory for serial rank and dummy rank_pre
        r = malloc(nodecount * sizeof(double));
        r_pre = malloc(nodecount * sizeof(double));
 
@@ -95,9 +95,9 @@ int main (int argc, char* argv[]){
 
        // CORE CALCULATION
        do{
-           // Increase iteration number 
+           // Count iterations
            ++iterationcount;
-           // Copy rank into rank_pre
+           // Copy rank as pre-existing rank
            vec_cp(r, r_pre, nodecount);
            
            // Loop over nodes
@@ -113,19 +113,21 @@ int main (int argc, char* argv[]){
 
     //printf("Program converges at %d th iteration.\n", iterationcount);
 
-    // post processing
-    node_destroy(nodehead, nodecount);
-    free(num_in_links); free(num_out_links);
+       // post processing
+       node_destroy(nodehead, nodecount);
+       free(num_in_links); free(num_out_links);
     
-    // Compare the result 
-    error = rel_error(collected_r, r, nodecount);
-    printf ("The relative error against the reference result is %e .\n", error);
-    free(r); free(r_pre); free(collected_r);
-    if ( error < cst_addapted_threshold){
-        printf("Congratulations! Your result is correct!\n");
-        return 0;
-    }else{
-        printf("Sorry. Your result is wrong.\n");
-        return 1;
-    }
+       // Compare the result 
+       // Get error
+       error = rel_error(collected_r, r, nodecount);
+       printf ("The relative error against the reference result is %e .\n", error);
+       free(r); free(r_pre); free(collected_r);
+   
+       if ( error < cst_addapted_threshold){
+           printf("Congratulations! Your result is correct!\n");
+           return 0;
+       }else{
+           printf("Sorry. Your result is wrong.\n");
+           return 1;
+       }
 }
