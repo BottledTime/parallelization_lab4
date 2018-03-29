@@ -75,12 +75,14 @@ echo "Evaluating the results..."
             #BestTime=10000000;
             RecordTime=10000000;
             txtFile=$mainEX$SAMPLE$CORE.txt
-           
-            touch $txtFile
+            txtSrl=$srltsEx$SAMPLE$CORE.txt
+            
+          touch $txtFile
             echo "Program: $mainEX" >> $txtFile
-            echo "Problem size: $SAMPLE" >> $txtFile
-	         echo "Number of cores: $CORE" >> $txtFile
-
+	    echo "Problem size: $SAMPLE" >> $txtFile
+	    echo "Number of cores: $CORE" >> $txtFile
+            
+            
             ATTEMPT=0
             while [[ $ATTEMPT -ne $Duplicates ]]; do
                 let ATTEMPT+=1
@@ -97,8 +99,6 @@ echo "Evaluating the results..."
                      #   RecordTime=$temp
                     #fi
 					echo "Time of calculation: $temp"
-	            echo "$temp" >> $txtFile
-	            
                 else
                     # wrong result, record the state
                     if [[ $stat -eq "-254" ]]; then
