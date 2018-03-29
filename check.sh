@@ -1,11 +1,11 @@
 #! /bin/bash
 # Evaluate the assignment of Lab 3
-# 
+#
 # yaochen@ualberta.ca
-# Created Feb 16 2016   
+# Created Feb 16 2016
 # Modified Feb 16 2016
 # Modified Mar 15 2017 (huiquan@ualberta.ca)
-# 
+#
 # Usage:
 #	./check.sh
 # Notes:
@@ -18,7 +18,7 @@
 # Welcome
 echo "=====Evaluation for Lab 4 code.====="
 # Parameters
-Sizes=(5300 13000)
+Sizes=(5155 13000 18789)
 Cores=(1 4)
 Duplicates=4
 
