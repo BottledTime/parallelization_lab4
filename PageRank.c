@@ -38,7 +38,7 @@ int main (int argc, char* argv[]){
     int iterationcount = 0;
     double start, end;
     int my_rank, npes;
-    int local_a, local_b, local_node;
+    int local_node;
     int *recvcounts, *displacements;
 
     // Initialize MPI
@@ -76,8 +76,6 @@ int main (int argc, char* argv[]){
 
     // Get locals
     local_node = nodecount/npes;
-    local_a = my_rank*local_node;
-    local_b = local_a + local_node;
 
     recvcounts = malloc(npes * sizeof(int));
     displacements = malloc(npes * sizeof(int));

@@ -1,0 +1,13 @@
+Program: multiplemachinepagerank
+Problem size: 5155
+Number of cores: 4
+0.107098
+0.133732
+0.107928
+0.130379
+0.116761
+0.142994
+0.120363
+0.136901
+0.117465
+0.127940

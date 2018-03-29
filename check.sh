@@ -19,6 +19,8 @@
 echo "=====Evaluation for Lab 4 code.====="
 # Parameters
 Sizes=(5155 13000 18789)
+#Sizes=(2312497)
+#Sizes=(2312497)
 Cores=(1 4)
 Duplicates=10
 
@@ -58,6 +60,7 @@ if [ ! -f $mainEX ]; then
 fi
 cp $mainEX tmp/
 cp web-Stanford.txt tmp/
+cp hosts tmp/
 
 cd tmp/
 ## calculation
@@ -70,6 +73,11 @@ echo "Evaluating the results..."
 	echo "Generating the testing data..."
     	./$mxgenEX -b $SAMPLE
         echo "SAMPLE $SAMPLE"
+        
+               # scp data_input 192.168.0.33:~/parallelization_lab4/tmp/
+               # scp data_input 192.168.0.36:~/parallelization_lab4/tmp/
+               # scp data_input 192.168.0.92:~/parallelization_lab4/tmp/
+
         for CORE in ${Cores[@]}; do
             echo "$CORE threads"
             #BestTime=10000000;
@@ -86,6 +94,7 @@ echo "Evaluating the results..."
                 let ATTEMPT+=1
 		        echo -n "Attempt Number $ATTEMPT: "
                 rm -f data_output
+		        #mpirun -np $CORE -f hosts ./$mainEX >/dev/null
 		        mpirun -np $CORE ./$mainEX >/dev/null
                 ./$srltstEX
                 stat=$?

@@ -1,0 +1,3 @@
+Program: pagerank
+Problem size: 2312497
+Number of cores: 16

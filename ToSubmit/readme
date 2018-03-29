@@ -1,0 +1,12 @@
+To compile our code, you can simply used the supplied Makefile by typing:
+make
+
+This will compile our page rank implementation and our page rank implementation
+that has a different work partition (slightly less efficient). If you would like
+to compile this yourself without the Makefile, you can do as follows:
+mpicc -o main PageRank.c Lab4_IO.c -g -Wall -lm
+mpicc -o alternate PageRankDifferentPartition.c Lab4_IO.c -g -Wall -lm
+
+This program is called with no commandline arguments. To run it using MPI,
+use:
+mpirun -np <desired number of processes> ./main
