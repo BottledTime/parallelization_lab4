@@ -18,9 +18,9 @@
 # Welcome
 echo "=====Evaluation for Lab 4 code.====="
 # Parameters
-Sizes=(5300 13000)
+Sizes=(5155 13000 18789)
 Cores=(1 4)
-Duplicates=4
+Duplicates=10
 
 # Create temporary directory for testing and copy all exacutable to there.
 mkdir tmp
@@ -75,14 +75,12 @@ echo "Evaluating the results..."
             #BestTime=10000000;
             RecordTime=10000000;
             txtFile=$mainEX$SAMPLE$CORE.txt
-            txtSrl=$srltsEx$SAMPLE$CORE.txt
-            
-          touch $txtFile
+           
+            touch $txtFile
             echo "Program: $mainEX" >> $txtFile
-	    echo "Problem size: $SAMPLE" >> $txtFile
-	    echo "Number of cores: $CORE" >> $txtFile
-            
-            
+            echo "Problem size: $SAMPLE" >> $txtFile
+	         echo "Number of cores: $CORE" >> $txtFile
+
             ATTEMPT=0
             while [[ $ATTEMPT -ne $Duplicates ]]; do
                 let ATTEMPT+=1
@@ -99,6 +97,8 @@ echo "Evaluating the results..."
                      #   RecordTime=$temp
                     #fi
 					echo "Time of calculation: $temp"
+	            echo "$temp" >> $txtFile
+	            
                 else
                     # wrong result, record the state
                     if [[ $stat -eq "-254" ]]; then
